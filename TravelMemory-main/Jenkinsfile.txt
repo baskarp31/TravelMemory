@@ -8,17 +8,18 @@ pipeline {
         }
         stage('Install') {
             steps {
-                sh 'cd backend; npm install'
+                sh 'cd TravelMemory-main\backend; npm install'
             }
         }
         stage('Build') {
             steps {
-                sh 'cd backend; npm run build'
+                sh 'cd TravelMemory-main\backend; npm run build'
             }
         }
     }
 
 }
+
 
 
 
