@@ -11,7 +11,7 @@ Data format to be added:
 
 ```json
 {
-    "tripName": "Incredible India",
+    "tripName": "Incredible India.",
     "startDateOfJourney": "19-03-2022",
     "endDateOfJourney": "27-03-2022",
     "nameOfHotels":"Hotel Namaste, Backpackers Club",
