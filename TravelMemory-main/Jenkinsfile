@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'baskinode' }
     stages {
         stage('Checkout') {
             steps {
@@ -18,3 +18,4 @@ pipeline {
         }
     }
 }
+
