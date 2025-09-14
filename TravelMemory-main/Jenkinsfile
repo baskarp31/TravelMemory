@@ -1,21 +1,62 @@
+// The Final Travel Memory Jenkinsfile (Windows version)
 pipeline {
-    agent { label 'baskinode' }
+    agent { label 'baskiparam' }
+
+    environment {
+        app_name = 'travel_memory'
+    }
+
+    parameters {
+        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Check this to run unit tests.')
+    }
+
+    triggers {
+        githubPush()
+    }
+
     stages {
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/baskarp31/TravelMemory.git'
             }
         }
-        stage('Install') {
+
+        stage('Install Dependencies') {
             steps {
-                bat 'cd TravelMemory-main\\backend && npm install'
+                dir('TravelMemory-main\\backend') {
+                    bat 'npm install'
+                }
             }
         }
-        stage('Build') {
+
+        stage('Run Tests') {
+            when { expression { return params.RUN_TESTS } }
             steps {
-                bat 'cd TravelMemory-main\\backend && npm run build'
+                dir('TravelMemory-main\\backend') {
+                    bat 'npm test'
+                }
+            }
+        }
+
+        stage('Login to AWS and Check S3 buckets') {
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', 
+                  credentialsId: 'baskiawsjenkinsid']]) {
+                    echo "checking AWS S3 bucket.."
+                    bat "aws s3 ls"
+                    echo "${env.app_name} running on AWS"
+                }
             }
         }
     }
-}
 
+    post {
+        always {
+            echo "Pipeline finished. Cleaning up."
+            echo 'Installed and tested the application'
+        }
+        success {
+            echo "Checked S3 Buckets"
+        }
+    }
+}
