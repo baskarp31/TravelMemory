@@ -1,16 +1,21 @@
-// The Final Travel Memory Jenkinsfile (Windows version)
+// The Final Travel Memory Jenkinsfile
 pipeline {
+    // 1. Use the agent we configured
     agent { label 'baskinode' }
 
+    // 2. Define the non-secret variables
     environment {
-        app_name = 'travel_memory'
+        app_name = 'travel_memory' // CHANGE THIS
     }
-
+    
+    // 3. Define the parameters for flexibility (for manual runs)
     parameters {
         booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Check this to run unit tests.')
     }
 
+    // 4. Define the automatic trigger for this pipeline
     triggers {
+        // This enables the pipeline to be started automatically by a GitHub webhook on a 'git push'
         githubPush()
     }
 
@@ -23,17 +28,19 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
+                // Run npm install inside the 'backend' folder
                 dir('backend') {
-                    bat 'npm install'
+                    sh 'npm install'
                 }
             }
         }
 
         stage('Run Tests') {
+            // A conditional stage based on our parameter
             when { expression { return params.RUN_TESTS } }
             steps {
                 dir('backend') {
-                    bat 'npm test'
+                    sh 'npm test'
                 }
             }
         }
@@ -43,16 +50,18 @@ pipeline {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', 
                   credentialsId: 'baskiawsjenkinsid']]) {
                     echo "checking AWS S3 bucket.."
-                    bat "aws s3 ls"
+                    sh "aws s3 ls"
                     echo "${env.app_name} running on AWS"
                 }
             }
         }
     }
-
+    
+    // Post-build actions for cleanup
     post {
         always {
             echo "Pipeline finished. Cleaning up."
+            // Always logout to be safe
             echo 'Installed and tested the application'
         }
         success {
@@ -60,5 +69,3 @@ pipeline {
         }
     }
 }
-
-
