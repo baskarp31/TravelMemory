@@ -23,7 +23,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                dir('TravelMemory-main\\backend') {
+                dir('backend') {
                     bat 'npm install'
                 }
             }
@@ -32,7 +32,7 @@ pipeline {
         stage('Run Tests') {
             when { expression { return params.RUN_TESTS } }
             steps {
-                dir('TravelMemory-main\\backend') {
+                dir('backend') {
                     bat 'npm test'
                 }
             }
@@ -60,4 +60,5 @@ pipeline {
         }
     }
 }
+
 
