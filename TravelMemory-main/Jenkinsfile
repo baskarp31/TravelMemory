@@ -1,6 +1,6 @@
 // The Final Travel Memory Jenkinsfile (Windows version)
 pipeline {
-    agent { label 'baskiparam' }
+    agent { label 'baskinode' }
 
     environment {
         app_name = 'travel_memory'
@@ -60,3 +60,4 @@ pipeline {
         }
     }
 }
+
