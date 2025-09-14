@@ -29,7 +29,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 // Run npm install inside the 'backend' folder
-                dir('backend') {
+                dir('TravelMemory-main//backend') {
                     sh 'npm install'
                 }
             }
@@ -39,7 +39,7 @@ pipeline {
             // A conditional stage based on our parameter
             when { expression { return params.RUN_TESTS } }
             steps {
-                dir('backend') {
+                dir('TravelMemory-main//backend') {
                     sh 'npm test'
                 }
             }
@@ -69,3 +69,4 @@ pipeline {
         }
     }
 }
+
